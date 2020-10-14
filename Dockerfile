@@ -14,6 +14,15 @@ RUN npm ci
 # Copy the remaining stuff
 COPY . /workspace
 
+## For these two to work, we'd need to have Headless Chrome in here, as well!
+## Potential description how to get here:
+## https://developers.google.com/web/tools/puppeteer/troubleshooting#running_puppeteer_in_docker
+## Run unit tests
+#RUN npm run test:ci
+#
+## Perform SonarQube analysis
+#RUN npm run sonar
+
 # Build app
 RUN npm run build-prod --source-map=false --build-optimizer=false
 
@@ -43,4 +52,4 @@ RUN mkdir /tmp/mercury-images
 
 COPY --from=backend-build /workspace/backend/build/libs/mercury.jar app.jar
 
-ENTRYPOINT ["java", "-javaagent:/elastic-apm-agent-1.15.0.jar", "-Delastic.apm.service_name=mercury-test", "-Delastic.apm.server_urls=https://2ed1556c8cfd4f7eb285ce4ec5d8d3ad.apm.europe-west3.gcp.cloud.es.io", "-Delastic.apm.application_packages=de.qaware.mercury", "-Djava.security.egd=file:/dev/./urandom", "-XX:+ExitOnOutOfMemoryError", "-Dserver.port=${PORT}","-jar","/app.jar"]	
+ENTRYPOINT ["java", "-javaagent:/elastic-apm-agent-1.15.0.jar", "-Delastic.apm.service_name=mercury-test", "-Delastic.apm.server_urls=https://2ed1556c8cfd4f7eb285ce4ec5d8d3ad.apm.europe-west3.gcp.cloud.es.io", "-Delastic.apm.application_packages=de.qaware.mercury", "-Djava.security.egd=file:/dev/./urandom", "-XX:+ExitOnOutOfMemoryError", "-Dserver.port=${PORT}","-jar","/app.jar"]
